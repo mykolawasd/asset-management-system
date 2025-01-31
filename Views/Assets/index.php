@@ -1,0 +1,5 @@
+<?php
+
+echo "Assets index";
+
+?>

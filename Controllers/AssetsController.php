@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Core\Controller;
 
+
 class AssetsController extends Controller {
 
     public function __construct() {
@@ -11,12 +12,21 @@ class AssetsController extends Controller {
     }
 
     public function viewAction() {
-        echo "AssetsController view";
+        return $this->render(null, [
+            'title' => 'Assets View',
+            'content' => 'Assets View'
+        ]);
     }
 
+
     public function indexAction() {
-        echo "AssetsController index";
+        return $this->render(null, [
+            'title' => 'Assets Index',
+            'content' => 'Assets Index'
+        ]);
     }
+
+
 }
 
 
