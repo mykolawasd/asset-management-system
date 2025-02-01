@@ -1,0 +1,2 @@
+# Ignore the database.php file
+Config/database.php
