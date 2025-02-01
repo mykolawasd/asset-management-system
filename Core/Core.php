@@ -3,8 +3,15 @@
 namespace Core;
 
 class Core {
-    private static $instance = null;
-    public $app;
+    private static ?Core $instance = null;
+
+    public static ?Database $db = null;
+
+    public array $app;
+
+
+
+
 
     private function __construct() {
         $this->app =[];
@@ -19,7 +26,9 @@ class Core {
     }
 
     public function init() { 
+        self::$db = new Database();
     }
+
 
 
     public function run() {
@@ -28,9 +37,9 @@ class Core {
         $controllerName = array_shift($route);
         $actionName = array_shift($route);
         
-        $this->app['controller'] = $controllerName;
+        $this->app['controller'] = ucfirst($controllerName);
         $this->app['action'] = $actionName;
-        
+
         $controller = '\\Controllers\\' . ucfirst($controllerName) . 'Controller';
         $action = $actionName . 'Action';
 
@@ -45,7 +54,7 @@ class Core {
         if ($this->app['action'] === 'index' || $this->app['action'] === '') {
             $action = 'indexAction';
         }
-
+        
         $controller = new $controller();
         $this->app['actionResult'] = $controller->$action();
     }
