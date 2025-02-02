@@ -19,8 +19,9 @@ abstract class Controller {
     }
 
     public function render($viewPath = null, $data = null) {
+        //dd($viewPath);
         $viewPath = $viewPath ?? $this->viewPath;
-
+        
         $template = new Template($viewPath);
         if (!empty($data)) {
             //var_dump($data);

@@ -4,7 +4,7 @@ namespace Controllers;
 
 use Core\Controller;
 
-class NotFoundController extends Controller {
+class MainController extends Controller {
 
 
     public function __construct() {
@@ -20,11 +20,11 @@ class NotFoundController extends Controller {
 
 
     public function errorAction() {
-        return $this->render(null, [
+        return $this->render('Views/404.php', [
             'title' => '404 Not Found',
-            'content' => '404 Not Found'
         ]);
     }
+
 
 
 

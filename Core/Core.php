@@ -9,10 +9,6 @@ class Core {
 
     public array $app;
 
-
-
-
-
     private function __construct() {
         $this->app =[];
     }
@@ -37,6 +33,12 @@ class Core {
         $route = explode('/', $route);
         $controllerName = array_shift($route);
         $actionName = array_shift($route);
+
+        if (empty($controllerName) && empty($actionName)) {
+            $controllerName = 'Main';
+            $actionName = 'index';
+        }
+
         
         $this->app['controller'] = ucfirst($controllerName);
         $this->app['action'] = $actionName;
@@ -44,19 +46,21 @@ class Core {
         $controller = '\\Controllers\\' . ucfirst($controllerName) . 'Controller';
         $action = $actionName . 'Action';
 
-        if (!class_exists($controller)) {
-            $controller = '\\Controllers\\NotFoundController';
-            $this->app['controller'] = 'NotFound';
-            $this->app['action'] = 'index';
-        } else if (!method_exists($controller, $action)) {
+        if (!class_exists($controller) ) {
+            $controller = '\\Controllers\\MainController';
+            $action = 'errorAction';
+            $this->app['controller'] = 'Main';
+            $this->app['action'] = 'error';
+
+        } 
+        else if (!method_exists($controller, $action)) {
+            $action = 'indexAction';
             $this->app['action'] = 'index';
         }
 
-        if ($this->app['action'] === 'index' || $this->app['action'] === '') {
-            $action = 'indexAction';
-        }
-        
+
         $controller = new $controller();
+
         $this->app['actionResult'] = $controller->$action();
     }
 
@@ -72,9 +76,6 @@ class Core {
 
         $html = $template->getHTML();
         echo $html;
-
-
-
      }
 
 
