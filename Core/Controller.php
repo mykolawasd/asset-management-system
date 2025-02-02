@@ -13,8 +13,14 @@ abstract class Controller {
         
     }
 
+    public function redirect($url) {
+        header('Location: ' . $url);
+        exit;
+    }
+
     public function render($viewPath = null, $data = null) {
         $viewPath = $viewPath ?? $this->viewPath;
+
         $template = new Template($viewPath);
         if (!empty($data)) {
             //var_dump($data);

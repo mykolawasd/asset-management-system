@@ -12,11 +12,45 @@ class UsersController extends Controller {
         parent::__construct();
     }
 
+    public function loginAction() {
 
-    public function registerAction() {
+        if (isset($_SESSION['user'])) {
+            return $this->redirect('/');
+        }
+
         $errors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+
+            if (User::authenticate($username, $password)) {
+                return $this->render('Views/Users/login-done.php');
+            }
+
+            else {
+                $errors['login'][] = 'Invalid username or password';
+            }
+        }
+        else {
+            return $this->render('Views/Users/login.php', ['errors' => $errors]);
+        }
+    }
+
+    
+
+
+    public function registerAction() {
+
+        if (isset($_SESSION['user'])) {
+            return $this->redirect('/');
+        }
+
+        $errors = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
             $username = $_POST['username'];
             $password = $_POST['password'];
             $password2 = $_POST['password2'];
@@ -60,14 +94,17 @@ class UsersController extends Controller {
                 return $this->render('Views/Users/register-done.php');
             }
             
-
-
-
         } 
         else {
             return $this->render();
         }
     }
+
+    public function logoutAction() {
+        User::logout();
+        return $this->redirect('/Users/login');
+    }
+
 
 
 }

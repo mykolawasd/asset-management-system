@@ -26,6 +26,7 @@ class Core {
     }
 
     public function init() { 
+        session_start();
         self::$db = new Database();
     }
 
