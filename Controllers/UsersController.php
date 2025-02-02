@@ -14,6 +14,7 @@ class UsersController extends Controller {
     }
 
     public function loginAction() {
+
         Core::getInstance()->app['title'] = 'Login';
 
         if (isset($_SESSION['user'])) {
@@ -28,6 +29,7 @@ class UsersController extends Controller {
             $password = $_POST['password'];
 
             if (User::authenticate($username, $password)) {
+                session_regenerate_id(true);
                 return $this->redirect('/');
             }
 
@@ -35,9 +37,9 @@ class UsersController extends Controller {
                 $errors['login'][] = 'Invalid username or password';
             }
         }
-        else {
-            return $this->render('Views/Users/login.php', ['errors' => $errors]);
-        }
+    
+        return $this->render('Views/Users/login.php', ['errors' => $errors]);
+        
     }
 
     
