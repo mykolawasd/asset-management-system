@@ -20,7 +20,9 @@
         </div>
         <div class="col-md-3 text-end">
             <?php if (isset($_SESSION['user'])): ?>
+
             <p>Welcome, <?php e($_SESSION['user']['username']); ?></p>
+
             <a href="/Users/logout">Logout</a>
             <?php else: ?>
             <a href="/Users/login">Login</a>
