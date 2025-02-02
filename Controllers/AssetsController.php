@@ -3,7 +3,7 @@
 namespace Controllers;
 
 use Core\Controller;
-
+use Core\Core;
 
 class AssetsController extends Controller {
 
@@ -12,6 +12,7 @@ class AssetsController extends Controller {
     }
 
     public function viewAction() {
+        Core::getInstance()->app['title'] = 'Assets View';
         return $this->render(null, [
             'title' => 'Assets View',
             'content' => 'Assets View'
@@ -20,12 +21,14 @@ class AssetsController extends Controller {
 
 
     public function indexAction() {
+        Core::getInstance()->app['title'] = 'Assets Index';
         return $this->render(null, [
             'title' => 'Assets Index',
             'content' => 'Assets Index'
         ]);
     }
 
+    
 
 }
 

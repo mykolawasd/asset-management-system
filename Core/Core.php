@@ -70,11 +70,10 @@ class Core {
     public function done() {
         $layout = 'Themes/Light/Layout.php';
         $template = new Template($layout);
-
-        
+        @$template->setParam('title', $this->app['title']);
         $template->setParam('content', $this->app['actionResult']);
-
         $html = $template->getHTML();
+
         echo $html;
      }
 

@@ -22,8 +22,12 @@
             <?php if (isset($_SESSION['user'])): ?>
             <p>Welcome, <?php e($_SESSION['user']['username']); ?></p>
             <a href="/Users/logout">Logout</a>
-        <?php endif; ?>
+            <?php else: ?>
+            <a href="/Users/login">Login</a>
+            <a href="/Users/register">Register</a>
+            <?php endif; ?>
         </div>
+
 
 
 

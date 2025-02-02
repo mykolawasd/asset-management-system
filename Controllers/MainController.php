@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Core\Controller;
+use Core\Core;
 
 class MainController extends Controller {
 
@@ -12,6 +13,7 @@ class MainController extends Controller {
     }
 
     public function indexAction() {
+        Core::getInstance()->app['title'] = 'Home';
         return $this->render();
     }
 
@@ -19,7 +21,9 @@ class MainController extends Controller {
 
 
 
+
     public function errorAction() {
+        Core::getInstance()->app['title'] = '404 Not Found';
         return $this->render('Views/404.php', [
             'title' => '404 Not Found',
         ]);

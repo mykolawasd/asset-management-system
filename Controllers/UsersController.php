@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Core\Controller;
 use Models\User;
+use Core\Core;
 
 class UsersController extends Controller {
 
@@ -13,6 +14,7 @@ class UsersController extends Controller {
     }
 
     public function loginAction() {
+        Core::getInstance()->app['title'] = 'Login';
 
         if (isset($_SESSION['user'])) {
             return $this->redirect('/');
@@ -26,7 +28,7 @@ class UsersController extends Controller {
             $password = $_POST['password'];
 
             if (User::authenticate($username, $password)) {
-                return $this->render('Views/Users/login-done.php');
+                return $this->redirect('/');
             }
 
             else {
@@ -42,7 +44,8 @@ class UsersController extends Controller {
 
 
     public function registerAction() {
-
+        Core::getInstance()->app['title'] = 'Register';
+        
         if (isset($_SESSION['user'])) {
             return $this->redirect('/');
         }
