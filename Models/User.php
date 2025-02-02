@@ -33,7 +33,6 @@ class User {
             'password_hash' => $password_hash,
             'role' => $this->role->value
         ];
-        var_dump($params);
 
         Core::$db->query($sql, $params);
     }

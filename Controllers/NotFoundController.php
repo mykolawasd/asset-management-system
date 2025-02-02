@@ -12,10 +12,7 @@ class NotFoundController extends Controller {
     }
 
     public function indexAction() {
-        return $this->render(null, [
-            'title' => '404 Not Found',
-            'content' => '404 Not Found'
-        ]);
+        return $this->render();
     }
 
 
