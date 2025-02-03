@@ -33,28 +33,34 @@ class Database {
     // }
 
     /**
-     * Query the database
+     * Query the database with automatic parameter type binding.
      * @param string $sql
      * @param array $params
      * @return \PDOStatement
      */
-
     public function query(string $sql, array $params = []): \PDOStatement {
         try {
             $stmt = $this->db->prepare($sql);
-            $stmt->execute($params);
+            // Перебираем переданные параметры и привязываем их с указанием типа
+            foreach ($params as $key => $value) {
+                $paramType = is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR;
+                $stmt->bindValue($key, $value, $paramType);
+            }
+            $stmt->execute();
             return $stmt;
         } catch (\PDOException $e) {
             die("Error: " . $e->getMessage());
         }
-
     }
+
+
 
     // public function execute($sql, $params = []) {
     //     try {
     //         $stmt = $this->db->prepare($sql);
     //         $stmt->execute($params);
     //         return $stmt->rowCount();
+
     //     } catch (\PDOException $e) {
     //         die("Error: " . $e->getMessage());
     //     }

@@ -68,4 +68,9 @@ class User {
         unset($_SESSION['user']);
     }
 
+    public static function isAdmin(): bool {
+        return $_SESSION['user']['role'] === Role::ADMIN->value;
+    }
+
+
 }
