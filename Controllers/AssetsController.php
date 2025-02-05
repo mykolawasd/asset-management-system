@@ -17,6 +17,10 @@ class AssetsController extends Controller {
     }
 
     public function viewAction() {
+        if (!isset($_SESSION['user'])) {
+            return $this->redirect('/Users/login'); 
+        }
+
         $assetId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
         if (!$assetId) {
             return $this->redirect('/Assets');
