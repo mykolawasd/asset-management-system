@@ -39,6 +39,35 @@ class Assets {
         return $asset ? $asset : null;
     }
 
+    public static function getSimilarAssets(int $assetId, array $tagIds, int $limit = 10): array {
+        if (empty($tagIds)) {
+            return [];
+        }
+        $placeholders = [];
+        $params = [];
+
+        foreach ($tagIds as $index => $tagId) {
+            $key = ":tag{$index}";
+            $placeholders[] = $key;
+            $params[$key] = $tagId;
+        }
+        $placeholdersStr = implode(',', $placeholders);
+        $params[':assetId'] = $assetId;
+        $params[':limit'] = $limit;
+        
+        $sql = "SELECT a.*, COUNT(*) as common_tags
+                FROM asset_tags at
+                JOIN assets a ON a.id = at.asset_id
+                WHERE at.tag_id IN ($placeholdersStr)
+                  AND a.id != :assetId
+                GROUP BY a.id
+                ORDER BY common_tags DESC
+                LIMIT :limit";
+        
+        $stmt = Core::$db->query($sql, $params);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
 
     
 

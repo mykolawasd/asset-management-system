@@ -34,9 +34,13 @@ class AssetsController extends Controller {
         
 
         $tags = Tags::getTagsByAssetId($asset['id']);
+        $tagIds = array_map(function($tag) {
+            return $tag['id'];
+        }, $tags);
         $downloads = AssetDownloads::getDownloadsByAssetId($asset['id']);
         $images = AssetImages::getImagesByAssetId($asset['id']);
 
+        $similarAssets = Assets::getSimilarAssets($asset['id'], $tagIds, 9);
 
         Core::getInstance()->app['title'] = $asset['title'];
         return $this->render(null, [
@@ -44,6 +48,7 @@ class AssetsController extends Controller {
             'tags' => $tags,
             'downloads' => $downloads,
             'images' => $images,
+            'similarAssets' => $similarAssets,
         ]);
     }
 

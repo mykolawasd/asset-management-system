@@ -34,13 +34,52 @@
                 <img src="<?= $asset['thumbnail_url'] ?>" class="img-fluid mb-4" alt="<?php e($asset['title']); ?>">
             <?php endif; ?>
 
-
-
+            <!-- Block with asset  description -->
             <div class="description mb-3">
-                <p><?= $asset['description'] ?></p>
+                <div id="description-content" class="collapsed">
+                    <?= $asset['description'] ?>
+
+                </div>
+                <a href="#" id="toggle-description" class="btn btn-link">Show More</a>
             </div>
 
-
+            <!-- Carousel with similar assets -->
+            <?php if (!empty($similarAssets)): ?>
+                <div class="d-flex justify-content-end mb-2">
+                    <button type="button" class="btn btn-secondary carousel-control-btn me-2" data-bs-target="#similarAssetsCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary carousel-control-btn" data-bs-target="#similarAssetsCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <h3>Similar assets</h3>
+                <?php $chunks = array_chunk($similarAssets, 3); ?>
+                <div id="similarAssetsCarousel" class="carousel slide mb-4" data-bs-interval="false">
+                    <div class="carousel-inner">
+                        <?php foreach ($chunks as $chunkIndex => $chunk): ?>
+                            <div class="carousel-item <?= $chunkIndex === 0 ? 'active' : '' ?>">
+                                <div class="row">
+                                    <?php foreach ($chunk as $similarAsset): ?>
+                                        <div class="col-md-4">
+                                            <a href="/Assets/view?id=<?= $similarAsset['id'] ?>">
+                                                <div class="ratio ratio-16x9">
+                                                    <img src="<?= h($similarAsset['thumbnail_url']) ?>" class="img-fluid" alt="<?= h($similarAsset['title']) ?>" style="object-fit: cover;">
+                                                </div>
+                                            </a>
+                                            <div class="text-center mt-2">
+                                                <h5 class="carousel-asset-title"><?= h($similarAsset['title']) ?></h5>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
 
         <!-- Right column: -->
@@ -100,13 +139,6 @@
   </div>
 </div>
 
-<!-- Add styles for highlighting the active thumbnail -->
-<style>
-    .img-thumbnail.active-thumb {
-        border: 2px solid #007bff;
-    }
-</style>
-
 <!-- Script for synchronizing the thumbnail highlighting with the active carousel slide -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -134,5 +166,30 @@ document.addEventListener('DOMContentLoaded', function() {
         var activeIndex = Array.from(slides).indexOf(activeSlide);
         updateActiveThumbnail(activeIndex);
     });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  var descriptionContent = document.getElementById("description-content");
+  var toggleBtn = document.getElementById("toggle-description");
+  var collapsedClass = "collapsed";
+  var collapseHeight = 400; // Must match the value of max-height in CSS
+
+
+  // If the height of the description is less than the threshold value, hide the button
+  if (descriptionContent.scrollHeight <= collapseHeight) {
+    toggleBtn.style.display = "none";
+  }
+
+
+  toggleBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+    if (descriptionContent.classList.contains(collapsedClass)) {
+      descriptionContent.classList.remove(collapsedClass);
+      toggleBtn.textContent = "Show Less";
+    } else {
+      descriptionContent.classList.add(collapsedClass);
+      toggleBtn.textContent = "Show More";
+    }
+  });
 });
 </script>
