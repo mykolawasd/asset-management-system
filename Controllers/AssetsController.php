@@ -5,6 +5,7 @@ namespace Controllers;
 use Core\Controller;
 use Core\Core;
 use Models\Assets;
+use Models\Tags;
 
 class AssetsController extends Controller {
 
@@ -40,6 +41,14 @@ class AssetsController extends Controller {
         $assets = Assets::getPaginatedAssets($page, $perPage);
         $totalPages = ceil(Assets::getCountAssets() / $perPage);
 
+        $allTags = [];
+        foreach ($assets as $asset) {
+            $allTags[$asset['id']] = Tags::getTagsByAssetId($asset['id']);
+        }
+        //var_dump($tags);
+
+
+
 
 
         return $this->render(null, [
@@ -47,8 +56,11 @@ class AssetsController extends Controller {
             'assets' => $assets,
             'page' => $page,
             'perPage' => $perPage,
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
+            'allTags' => $allTags,
         ]);
+
+
 
 
 

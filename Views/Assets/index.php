@@ -21,9 +21,21 @@ use \Models\User;
                 <div class="card-body">
 
                     <h5 class="card-title"><?php e($asset['title']); ?></h5>
+
+                    <?php $tags = $allTags[$asset['id']]; ?>
+                    <?php foreach ($tags as $tag): ?>
+                        <span class="badge bg-secondary"><?php e($tag['name']); ?></span>
+                    <?php endforeach; ?>
+                    
+
+
+
+
+
                 </div>
             </div>
         </div>
+
         <?php endforeach; ?>
     </div>
 </div>
