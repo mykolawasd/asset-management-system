@@ -32,6 +32,13 @@ class Assets {
     }
 
 
+    public static function getAssetById(int $id): ?array {
+        $query = "SELECT * FROM assets WHERE id = :id";
+        $stmt = Core::$db->query($query, [':id' => $id]);
+        $asset = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $asset ? $asset : null;
+    }
+
 
     
 

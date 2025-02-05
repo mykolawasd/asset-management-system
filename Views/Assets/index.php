@@ -12,6 +12,7 @@ use \Models\User;
     <div class="row">
         <?php foreach ($assets as $asset): ?>
         <div class="col-md-4 mb-4">
+            <a href="/Assets/view?id=<?= $asset['id'] ?>" style="text-decoration:none; color:inherit;">
             <div class="card h-100">
                 <?php 
                 // TODO: Add default thumbnail
@@ -34,7 +35,9 @@ use \Models\User;
 
                 </div>
             </div>
+            </a>
         </div>
+
 
         <?php endforeach; ?>
     </div>

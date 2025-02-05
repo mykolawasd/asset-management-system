@@ -6,20 +6,43 @@ use Core\Controller;
 use Core\Core;
 use Models\Assets;
 use Models\Tags;
+use Models\AssetDownloads;
+use Models\AssetImages;
 
 class AssetsController extends Controller {
+
 
     public function __construct() {
         parent::__construct();
     }
 
     public function viewAction() {
-        Core::getInstance()->app['title'] = 'Assets View';
+        $assetId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
+        if (!$assetId) {
+            return $this->redirect('/Assets');
+        }
+  
+
+        $asset = Assets::getAssetById($assetId);
+        if (!$asset) {
+            return $this->render('Views/404.php', ['title' => 'Asset Not Found']);
+        }
+        
+
+        $tags = Tags::getTagsByAssetId($asset['id']);
+        $downloads = AssetDownloads::getDownloadsByAssetId($asset['id']);
+        $images = AssetImages::getImagesByAssetId($asset['id']);
+
+
+        Core::getInstance()->app['title'] = $asset['title'];
         return $this->render(null, [
-            'title' => 'Assets View',
-            'content' => 'Assets View'
+            'asset' => $asset,
+            'tags' => $tags,
+            'downloads' => $downloads,
+            'images' => $images,
         ]);
     }
+
 
 
     public function createAction() {
@@ -34,7 +57,7 @@ class AssetsController extends Controller {
         Core::getInstance()->app['title'] = 'Assets Index';
 
 
-        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
         $perPage = 9;
         //var_dump($page);
 
