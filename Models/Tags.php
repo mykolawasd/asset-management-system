@@ -16,4 +16,11 @@ class Tags {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getAllTags(): array {
+        $query = "SELECT * FROM tags";
+        $stmt = Core::$db->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 }

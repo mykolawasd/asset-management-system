@@ -99,6 +99,45 @@ class AssetsController extends Controller {
 
     }
 
+    public function searchAction() {
+        if (!isset($_SESSION['user'])) {
+            return $this->redirect('/Users/login');
+        }
+
+        $title = isset($_GET['title']) ? trim($_GET['title']) : '';
+        $tagsInput = isset($_GET['tags']) ? trim($_GET['tags']) : '';
+        $selectedTagIds = !empty($tagsInput) ? explode(',', $tagsInput) : [];
+
+        $selectedTagIds = array_filter(array_map('intval', $selectedTagIds));
+
+
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+        $perPage = 9;
+
+        $assets = Assets::searchAssets($title, $selectedTagIds, $page, $perPage);
+        $totalCount = Assets::getCountSearchAssets($title, $selectedTagIds);
+        $totalPages = ceil($totalCount / $perPage);
+
+
+        $allTags = [];
+        foreach ($assets as $asset) {
+            $allTags[$asset['id']] = Tags::getTagsByAssetId($asset['id']);
+        }
+
+
+        Core::getInstance()->app['title'] = 'Search Assets';
+
+        return $this->render('Views/Assets/search.php', [
+            'assets'      => $assets,
+            'allTags'     => $allTags,
+            'page'        => $page,
+            'perPage'     => $perPage,
+            'totalPages'  => $totalPages,
+            'searchTitle' => $title,
+            'searchTags'  => $selectedTagIds
+        ]);
+    }
+
 
 
     

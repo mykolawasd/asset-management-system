@@ -68,8 +68,84 @@ class Assets {
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public static function searchAssets(string $title, array $tagIds, int $page, int $perPage): array {
+        $offset = ($page - 1) * $perPage;
+        $params = [];
+        $whereParts = [];
 
-    
+        if (!empty($title)) {
+            $whereParts[] = "a.title LIKE :title";
+            $params[':title'] = '%' . $title . '%';
+        }
+
+        if (!empty($tagIds)) {
+            $tagPlaceholders = [];
+            foreach ($tagIds as $index => $tagId) {
+                $key = ":tag$index";
+                $tagPlaceholders[] = $key;
+                $params[$key] = $tagId;
+            }
+            $whereParts[] = "at.tag_id IN (" . implode(',', $tagPlaceholders) . ")";
+            $params[':tagCount'] = count($tagIds);
+
+            $sql = "SELECT a.*, COUNT(DISTINCT at.tag_id) as matched_tags
+                    FROM assets a
+                    JOIN asset_tags at ON a.id = at.asset_id";
+            if (!empty($whereParts)) {
+                $sql .= " WHERE " . implode(' AND ', $whereParts);
+            }
+            $sql .= " GROUP BY a.id
+                      HAVING COUNT(DISTINCT at.tag_id) = :tagCount
+                      LIMIT :limit OFFSET :offset";
+        } else {
+            $sql = "SELECT a.* FROM assets a";
+            if (!empty($whereParts)) {
+                $sql .= " WHERE " . implode(' AND ', $whereParts);
+            }
+            $sql .= " LIMIT :limit OFFSET :offset";
+        }
+        $params[':limit'] = $perPage;
+        $params[':offset'] = $offset;
+
+        $stmt = Core::$db->query($sql, $params);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public static function getCountSearchAssets(string $title, array $tagIds): int {
+        $params = [];
+        $whereParts = [];
+
+        if (!empty($title)) {
+            $whereParts[] = "a.title LIKE :title";
+            $params[':title'] = '%' . $title . '%';
+        }
+
+        if (!empty($tagIds)) {
+            $tagPlaceholders = [];
+            foreach ($tagIds as $index => $tagId) {
+                $key = ":tag$index";
+                $tagPlaceholders[] = $key;
+                $params[$key] = $tagId;
+            }
+            $whereParts[] = "at.tag_id IN (" . implode(',', $tagPlaceholders) . ")";
+            $params[':tagCount'] = count($tagIds);
+            $sql = "SELECT COUNT(*) FROM (
+                        SELECT a.id
+                        FROM assets a
+                        JOIN asset_tags at ON a.id = at.asset_id
+                        WHERE " . implode(' AND ', $whereParts) . "
+                        GROUP BY a.id
+                        HAVING COUNT(DISTINCT at.tag_id) = :tagCount
+                    ) as t";
+        } else {
+            $sql = "SELECT COUNT(*) FROM assets a";
+            if (!empty($whereParts)) {
+                $sql .= " WHERE " . implode(' AND ', $whereParts);
+            }
+        }
+        $stmt = Core::$db->query($sql, $params);
+        return (int)$stmt->fetchColumn();
+    }
 
 }
 

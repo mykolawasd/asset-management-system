@@ -1,12 +1,12 @@
 <?php
 use \Models\User;
 ?>
-<?php if (User::isAdmin()) : ?>
+<!-- <?php if (User::isAdmin()) : ?>
 <div class="mb-3">
     <h2>Assets</h2>
     <a href="/Assets/create" class="btn btn-primary">Create</a>
 </div>
-<?php endif; ?>
+<?php endif; ?> -->
 
 <div class="container">
     <div class="row">
