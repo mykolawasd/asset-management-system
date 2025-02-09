@@ -27,3 +27,61 @@ function truncateHtml($text, $maxLength) {
 
     return $truncated . '...';
 }
+
+function resizeImage($sourcePath, $destPath, $maxWidth, $maxHeight) {
+    list($width, $height, $imageType) = getimagesize($sourcePath);
+    $ratio = $width / $height;
+    if ($width > $maxWidth || $height > $maxHeight) {
+        if ($maxWidth / $maxHeight > $ratio) {
+            $newHeight = $maxHeight;
+            $newWidth = $maxHeight * $ratio;
+        } else {
+            $newWidth = $maxWidth;
+            $newHeight = $maxWidth / $ratio;
+        }
+        $newWidth  = (int) round($newWidth);
+        $newHeight = (int) round($newHeight);
+    } else {
+        // Image is already resized
+        copy($sourcePath, $destPath);
+        return;
+    }
+    
+    switch ($imageType) {
+        case IMAGETYPE_JPEG:
+            $srcImage = imagecreatefromjpeg($sourcePath);
+            break;
+        case IMAGETYPE_PNG:
+            $srcImage = imagecreatefrompng($sourcePath);
+            break;
+        case IMAGETYPE_GIF:
+            $srcImage = imagecreatefromgif($sourcePath);
+            break;
+        default:
+            return;
+    }
+    
+    $dstImage = imagecreatetruecolor($newWidth, $newHeight);
+    
+    if ($imageType == IMAGETYPE_PNG) {
+        imagealphablending($dstImage, false);
+        imagesavealpha($dstImage, true);
+    }
+    
+    imagecopyresampled($dstImage, $srcImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+    
+    switch ($imageType) {
+        case IMAGETYPE_JPEG:
+            imagejpeg($dstImage, $destPath, 90);
+            break;
+        case IMAGETYPE_PNG:
+            imagepng($dstImage, $destPath);
+            break;
+        case IMAGETYPE_GIF:
+            imagegif($dstImage, $destPath);
+            break;
+    }
+    
+    imagedestroy($srcImage);
+    imagedestroy($dstImage);
+}

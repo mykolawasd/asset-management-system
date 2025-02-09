@@ -8,10 +8,34 @@ use \PDO;
 
 
 class Assets {
+    public ?int $id = null;
+    public string $title;
+    public ?string $thumbnail_url;
+    public string $description;
+    public int $user_id;
+    public string $created_at;
 
+    public function __construct(string $title, ?string $thumbnail_url, string $description, int $user_id) {
+        $this->title = $title;
+        $this->thumbnail_url = $thumbnail_url;
+        $this->description = $description;
+        $this->user_id = $user_id;
+        $this->created_at = date('Y-m-d H:i:s');
+    }
 
-    private string $title;
-    private string $description;
+    public function create(): int {
+        $query = "INSERT INTO assets (title, thumbnail_url, description, created_at, user_id)
+                  VALUES (:title, :thumbnail_url, :description, :created_at, :user_id)";
+        Core::$db->query($query, [
+            ':title' => $this->title,
+            ':thumbnail_url' => $this->thumbnail_url,
+            ':description' => $this->description,
+            ':created_at' => $this->created_at,
+            ':user_id' => $this->user_id,
+        ]);
+        $this->id = Core::$db->getLastInsertId();
+        return $this->id;
+    }
 
     public static function getPaginatedAssets(int $page, int $perPage): array {
         $offset = ($page - 1) * $perPage;
@@ -147,5 +171,12 @@ class Assets {
         return (int)$stmt->fetchColumn();
     }
 
+    public static function attachTag(int $assetId, int $tagId): void {
+        $query = "INSERT INTO asset_tags (asset_id, tag_id) VALUES (:asset_id, :tag_id)";
+        Core::$db->query($query, [
+            ':asset_id' => $assetId,
+            ':tag_id' => $tagId,
+        ]);
+    }
 }
 

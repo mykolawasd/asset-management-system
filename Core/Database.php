@@ -66,7 +66,13 @@ class Database {
     //     }
 
 
+    
+
+    public function getLastInsertId(): int {
+        return $this->db->lastInsertId();
     }
+
+}
 
 
 

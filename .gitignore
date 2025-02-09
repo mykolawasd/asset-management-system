@@ -1,2 +1,9 @@
 # Ignore the database.php file
 Config/database.php
+
+# Ignore the uploads folder
+uploads/
+
+
+
+

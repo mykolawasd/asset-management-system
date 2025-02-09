@@ -22,5 +22,16 @@ class Tags {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getTagByName(string $name): ?array {
+        $query = "SELECT * FROM tags WHERE name = :name LIMIT 1";
+        $stmt = Core::$db->query($query, [':name' => $name]);
+        $tag = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $tag ? $tag : null;
+    }
 
+    public static function createTag(string $name): int {
+        $query = "INSERT INTO tags (name) VALUES (:name)";
+        Core::$db->query($query, [':name' => $name]);
+        return Core::$db->getLastInsertId();
+    }
 }
