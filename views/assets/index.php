@@ -4,7 +4,7 @@ use \Models\User;
 <!-- <?php if (User::isAdmin()) : ?>
 <div class="mb-3">
     <h2>Assets</h2>
-    <a href="/Assets/create" class="btn btn-primary">Create</a>
+    <a href="/assets/create" class="btn btn-primary">Create</a>
 </div>
 <?php endif; ?> -->
 
@@ -12,7 +12,7 @@ use \Models\User;
     <div class="row">
         <?php foreach ($assets as $asset): ?>
         <div class="col-md-4 mb-4">
-            <a href="/Assets/view?id=<?= $asset['id'] ?>" style="text-decoration:none; color:inherit;">
+            <a href="/assets/view?id=<?= $asset['id'] ?>" style="text-decoration:none; color:inherit;">
             <div class="card h-100">
                 <?php 
                 // TODO: Add default thumbnail
@@ -52,19 +52,19 @@ use \Models\User;
     $startPage = max(1, $endPage - $window + 1);
 
     if ($page > 1) {
-        echo '<a href="/Assets?page=' . ($page - 1) . '" class="btn btn-secondary me-2">Previous</a>';
+        echo '<a href="/assets?page=' . ($page - 1) . '" class="btn btn-secondary me-2">Previous</a>';
     }
 
     for ($i = $startPage; $i <= $endPage; $i++) {
         if ($i == $page) {
             echo '<strong class="btn btn-primary me-2">' . $i . '</strong>';
         } else {
-            echo '<a href="/Assets?page=' . $i . '" class="btn btn-secondary me-2">' . $i . '</a>';
+            echo '<a href="/assets?page=' . $i . '" class="btn btn-secondary me-2">' . $i . '</a>';
         }
     }
 
     if ($page < $totalPages) {
-        echo '<a href="/Assets?page=' . ($page + 1) . '" class="btn btn-secondary">Next</a>';
+        echo '<a href="/assets?page=' . ($page + 1) . '" class="btn btn-secondary">Next</a>';
     }
     ?>
 </div>

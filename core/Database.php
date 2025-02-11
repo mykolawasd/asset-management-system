@@ -2,7 +2,7 @@
 
 namespace Core;
 
-require_once __DIR__ . '/../Config/database.php';
+require_once __DIR__ . '/../config/database.php';
 
 class Database {
     private \PDO $db;
@@ -15,22 +15,6 @@ class Database {
             die("Error: " . $e->getMessage());
         }
     }
-
-
-
-    // private function connect() {
-    //     $db = null;
-
-    //    try {
-    //     $db = new \PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD);
-
-    //    } catch (\PDOException $e) {
-
-    //     die("Error: " . $e->getMessage());
-    //    }
-    //    return $db;
-
-    // }
 
     /**
      * Query the database with automatic parameter type binding.
@@ -51,22 +35,7 @@ class Database {
         } catch (\PDOException $e) {
             die("Error: " . $e->getMessage());
         }
-    }
-
-
-
-    // public function execute($sql, $params = []) {
-    //     try {
-    //         $stmt = $this->db->prepare($sql);
-    //         $stmt->execute($params);
-    //         return $stmt->rowCount();
-
-    //     } catch (\PDOException $e) {
-    //         die("Error: " . $e->getMessage());
-    //     }
-
-
-    
+    }    
 
     public function getLastInsertId(): int {
         return $this->db->lastInsertId();

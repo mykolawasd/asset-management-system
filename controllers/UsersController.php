@@ -38,7 +38,7 @@ class UsersController extends Controller {
             }
         }
     
-        return $this->render('Views/Users/login.php', ['errors' => $errors]);
+        return $this->render('views/users/login.php', ['errors' => $errors]);
         
     }
 
@@ -96,7 +96,7 @@ class UsersController extends Controller {
             else {
                 $user = new User($username, $password);
                 $user->create();
-                return $this->render('Views/Users/register-done.php');
+                return $this->render('views/users/register-done.php');
             }
             
         } 
@@ -107,7 +107,7 @@ class UsersController extends Controller {
 
     public function logoutAction() {
         User::logout();
-        return $this->redirect('/Users/login');
+        return $this->redirect('/users/login');
     }
 
 

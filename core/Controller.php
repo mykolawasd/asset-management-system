@@ -9,7 +9,7 @@ abstract class Controller {
 
         $controller = Core::getInstance()->app['controller'];
         $action = Core::getInstance()->app['action'];
-        $this->viewPath = "Views/" . $controller . "/" . $action . ".php";
+        $this->viewPath = "views/" . $controller . "/" . $action . ".php";
         
     }
 

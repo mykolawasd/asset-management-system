@@ -18,18 +18,18 @@ class AssetsController extends Controller {
 
     public function viewAction() {
         if (!isset($_SESSION['user'])) {
-            return $this->redirect('/Users/login'); 
+            return $this->redirect('/users/login'); 
         }
 
         $assetId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
         if (!$assetId) {
-            return $this->redirect('/Assets');
+            return $this->redirect('/assets');
         }
   
 
         $asset = Assets::getAssetById($assetId);
         if (!$asset) {
-            return $this->render('Views/404.php', ['title' => 'Asset Not Found']);
+            return $this->render('views/404.php', ['title' => 'Asset Not Found']);
         }
         
 
@@ -56,7 +56,7 @@ class AssetsController extends Controller {
 
     public function createAction() {
         if (!isset($_SESSION['user'])) {
-            return $this->redirect('/Users/login');
+            return $this->redirect('/users/login');
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -145,11 +145,11 @@ class AssetsController extends Controller {
                 }
             }
             
-            return $this->redirect('/Assets/view?id=' . $assetId);
+            return $this->redirect('/assets/view?id=' . $assetId);
         }
 
         Core::getInstance()->app['title'] = 'Create Asset';
-        return $this->render('Views/Assets/create.php');
+        return $this->render('views/assets/create.php');
     }
 
     public function indexAction() {
@@ -181,7 +181,7 @@ class AssetsController extends Controller {
 
     public function searchAction() {
         if (!isset($_SESSION['user'])) {
-            return $this->redirect('/Users/login');
+            return $this->redirect('/users/login');
         }
 
         $title = isset($_GET['title']) ? trim($_GET['title']) : '';
@@ -220,17 +220,17 @@ class AssetsController extends Controller {
 
     public function editAction() {
         if (!isset($_SESSION['user'])) {
-            return $this->redirect('/Users/login');
+            return $this->redirect('/users/login');
         }
 
         $assetId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
         if (!$assetId) {
-            return $this->redirect('/Assets');
+            return $this->redirect('/assets');
         }
 
         $asset = Assets::getAssetById($assetId);
         if (!$asset) {
-            return $this->render('Views/404.php', ['title' => 'Asset Not Found']);
+            return $this->render('views/404.php', ['title' => 'Asset Not Found']);
         }
         
         
@@ -332,17 +332,17 @@ class AssetsController extends Controller {
 
     public function deleteAction() {
         if (!isset($_SESSION['user'])) {
-            return $this->redirect('/Users/login');
+            return $this->redirect('/users/login');
         }
 
         $assetId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
         if (!$assetId) {
-            return $this->redirect('/Assets');
+            return $this->redirect('/assets');
         }
 
         $asset = Assets::getAssetById($assetId);
         if (!$asset) {
-            return $this->render('Views/404.php', ['title' => 'Asset Not Found']);
+            return $this->render('views/404.php', ['title' => 'Asset Not Found']);
         }
                 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -359,12 +359,12 @@ class AssetsController extends Controller {
                     unlink($thumbPath);
                 }
             }
-            return $this->redirect('/Assets');
+            return $this->redirect('/assets');
         }
 
         Tags::deleteOrphanTags();
-        
-        return $this->render('Views/Assets/delete.php', ['asset' => $asset]);
+
+        return $this->render('views/assets/delete.php', ['asset' => $asset]);
     }
 }
 

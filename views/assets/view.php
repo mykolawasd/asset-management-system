@@ -12,8 +12,8 @@ use \Models\User;
                 </div>
                 <?php if (User::isAdmin()): ?>
                 <div>
-                    <a href="/Assets/edit?id=<?= $asset['id'] ?>" class="btn btn-warning me-2">Edit</a>
-                    <a href="/Assets/delete?id=<?= $asset['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this asset?');">Delete</a>
+                    <a href="/assets/edit?id=<?= $asset['id'] ?>" class="btn btn-warning me-2">Edit</a>
+                    <a href="/assets/delete?id=<?= $asset['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this asset?');">Delete</a>
                 </div>
                 <?php endif; ?>
             </div>
@@ -81,7 +81,7 @@ use \Models\User;
                                 <div class="row">
                                     <?php foreach ($chunk as $similarAsset): ?>
                                         <div class="col-md-4">
-                                            <a href="/Assets/view?id=<?= $similarAsset['id'] ?>">
+                                            <a href="/assets/view?id=<?= $similarAsset['id'] ?>">
                                                 <div class="ratio ratio-16x9">
                                                     <img src="<?= h($similarAsset['thumbnail_url']) ?>" class="img-fluid" alt="<?= h($similarAsset['title']) ?>" style="object-fit: cover;">
                                                 </div>

@@ -43,11 +43,11 @@ class Core {
         $this->app['controller'] = ucfirst($controllerName);
         $this->app['action'] = $actionName;
 
-        $controller = '\\Controllers\\' . ucfirst($controllerName) . 'Controller';
+        $controller = '\\controllers\\' . ucfirst($controllerName) . 'Controller';
         $action = $actionName . 'Action';
 
         if (!class_exists($controller) ) {
-            $controller = '\\Controllers\\MainController';
+            $controller = '\\controllers\\MainController';
             $action = 'errorAction';
             $this->app['controller'] = 'Main';
             $this->app['action'] = 'error';
@@ -68,7 +68,7 @@ class Core {
 
 
     public function done() {
-        $layout = 'Themes/Light/Layout.php';
+        $layout = 'themes/light/layout.php';
         $template = new Template($layout);
         @$template->setParam('title', $this->app['title']);
         $template->setParam('content', $this->app['actionResult']);

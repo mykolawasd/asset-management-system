@@ -24,7 +24,7 @@ class MainController extends Controller {
 
     public function errorAction() {
         Core::getInstance()->app['title'] = '404 Not Found';
-        return $this->render('Views/404.php', [
+        return $this->render('views/404.php', [
             'title' => '404 Not Found',
         ]);
     }

@@ -3,8 +3,8 @@
     <div class="alert alert-warning">
         <p>Are you sure you want to delete the asset "<?= h($asset['title']) ?>"?</p>
     </div>
-    <form method="post" action="/Assets/delete?id=<?= $asset['id'] ?>">
+    <form method="post" action="/assets/delete?id=<?= $asset['id'] ?>">
         <button type="submit" class="btn btn-danger">Yes, Delete Asset</button>
-        <a href="/Assets/view?id=<?= $asset['id'] ?>" class="btn btn-secondary">Cancel</a>
+        <a href="/assets/view?id=<?= $asset['id'] ?>" class="btn btn-secondary">Cancel</a>
     </form>
 </div> 
