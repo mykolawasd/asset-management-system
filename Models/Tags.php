@@ -34,4 +34,9 @@ class Tags {
         Core::$db->query($query, [':name' => $name]);
         return Core::$db->getLastInsertId();
     }
+
+    public static function deleteOrphanTags(): void {
+        $query = "DELETE FROM tags WHERE id NOT IN (SELECT DISTINCT tag_id FROM asset_tags)";
+        Core::$db->query($query);
+    }
 }

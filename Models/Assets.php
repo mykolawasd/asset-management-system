@@ -178,5 +178,22 @@ class Assets {
             ':tag_id' => $tagId,
         ]);
     }
+
+    public static function updateAsset(int $assetId, string $title, ?string $thumbnail_url, string $description): void {
+        $query = "UPDATE assets 
+                  SET title = :title, thumbnail_url = :thumbnail_url, description = :description 
+                  WHERE id = :id";
+        Core::$db->query($query, [
+            ':title' => $title,
+            ':thumbnail_url' => $thumbnail_url,
+            ':description' => $description,
+            ':id' => $assetId,
+        ]);
+    }
+
+    public static function clearTags(int $assetId): void {
+        $query = "DELETE FROM asset_tags WHERE asset_id = :assetId";
+        Core::$db->query($query, [':assetId' => $assetId]);
+    }
 }
 

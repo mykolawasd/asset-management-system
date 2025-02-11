@@ -23,4 +23,18 @@ class AssetImages {
         ]);
         return Core::$db->getLastInsertId();
     }
+
+    public static function deleteImage(int $imageId): void {
+        $query = "SELECT url FROM asset_images WHERE id = :id";
+        $stmt = Core::$db->query($query, [':id' => $imageId]);
+        $image = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($image) {
+            $filePath = ltrim($image['url'], '/');
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            $delQuery = "DELETE FROM asset_images WHERE id = :id";
+            Core::$db->query($delQuery, [':id' => $imageId]);
+        }
+    }
 }

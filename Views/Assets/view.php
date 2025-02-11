@@ -1,6 +1,23 @@
+<?php
+use \Models\User;
+?>
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-8">
+            <!-- Asset info header: title, author, edit and delete buttons -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="asset-info">
+                    <h2><?= h($asset['title']) ?></h2>
+                    <div class="text-muted">Author: <?= h($asset['author'] ?? 'Unknown') ?></div>
+                </div>
+                <?php if (User::isAdmin()): ?>
+                <div>
+                    <a href="/Assets/edit?id=<?= $asset['id'] ?>" class="btn btn-warning me-2">Edit</a>
+                    <a href="/Assets/delete?id=<?= $asset['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this asset?');">Delete</a>
+                </div>
+                <?php endif; ?>
+            </div>
+
             <?php if (!empty($images)): ?>
                 <div id="assetCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
                     <div class="carousel-inner">
