@@ -202,7 +202,7 @@ class AssetsController extends Controller {
 
         Core::getInstance()->app['title'] = 'Search Assets';
 
-        return $this->render('Views/Assets/search.php', [
+        return $this->render('views/assets/search.php', [
             'assets'      => $assets,
             'allTags'     => $allTags,
             'page'        => $page,
