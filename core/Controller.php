@@ -6,11 +6,9 @@ abstract class Controller {
     protected $viewPath;
 
     public function __construct() {
-
-        $controller = Core::getInstance()->app['controller'];
+        $controller = strtolower(Core::getInstance()->app['controller']);
         $action = Core::getInstance()->app['action'];
         $this->viewPath = "views/" . $controller . "/" . $action . ".php";
-        
     }
 
     public function redirect($url) {
