@@ -143,7 +143,7 @@ use \Models\User;
             <ul class="list-group">
                <?php foreach ($downloads as $download): ?>
                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <a href="<?= $download['url'] ?>"><?= h($download['file_type']) ?></a>
+                      <a href="<?= $download['url'] ?>" target="_blank" rel="noopener noreferrer"><?= h($download['version']) ?></a>
                       <span class="badge bg-secondary"><?= h($download['created_at']) ?></span>
                    </li>
                <?php endforeach; ?>

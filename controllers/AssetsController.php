@@ -130,12 +130,23 @@ class AssetsController extends Controller {
                         if (in_array($ext, $allowedExtensions)) {
                             $imageFilename = uniqid('img_') . '.' . $ext;
                             $imageDestination = $uploadDirImages . $imageFilename;
-                            // Уменьшаем изображение до размеров 1080x1080 (максимум 1080)
                             resizeImage($images['tmp_name'][$i], $imageDestination, 1080, 1080);
                             $imageUrl = '/' . $imageDestination;
                             \Models\AssetImages::createImage($assetId, $imageUrl, $sortOrder);
                             $sortOrder++;
                         }
+                    }
+                }
+            }
+            
+            if (isset($_POST['download_url']) && is_array($_POST['download_url'])) {
+                $downloadUrls = $_POST['download_url'];
+                $downloadVersions = $_POST['download_version'] ?? [];
+                foreach ($downloadUrls as $index => $downloadUrl) {
+                    $downloadUrl = trim($downloadUrl);
+                    if (!empty($downloadUrl)) {
+                        $version = trim($downloadVersions[$index] ?? '');
+                        \Models\AssetDownloads::createDownload($assetId, $downloadUrl, $version);
                     }
                 }
             }
@@ -231,6 +242,7 @@ class AssetsController extends Controller {
         
         $tags = Tags::getTagsByAssetId($assetId);
         $images = AssetImages::getImagesByAssetId($assetId);
+        $downloads = AssetDownloads::getDownloadsByAssetId($assetId);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors = [];
@@ -293,6 +305,20 @@ class AssetsController extends Controller {
                 }
             }
 
+            \Models\AssetDownloads::deleteDownloadsByAssetId($assetId);
+
+            if (isset($_POST['download_url']) && is_array($_POST['download_url'])) {
+                $downloadUrls = $_POST['download_url'];
+                $downloadVersions = $_POST['download_version'] ?? [];
+                foreach ($downloadUrls as $index => $downloadUrl) {
+                    $downloadUrl = trim($downloadUrl);
+                    if (!empty($downloadUrl)) {
+                        $version = trim($downloadVersions[$index] ?? '');
+                        \Models\AssetDownloads::createDownload($assetId, $downloadUrl, $version);
+                    }
+                }
+            }
+
             if (count($errors) === 0) {
                 Assets::updateAsset($assetId, $title, $thumbnailUrl, $description);
                 
@@ -330,6 +356,7 @@ class AssetsController extends Controller {
             'asset' => $asset,
             'tags' => $tags,
             'images' => $images,
+            'downloads' => $downloads,
         ]);
     }
 
@@ -364,6 +391,7 @@ class AssetsController extends Controller {
             }
 
             Tags::deleteOrphanTags();
+            AssetDownloads::cleanupOrphanDownloads();
             return $this->redirect('/assets');
         }
 

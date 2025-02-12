@@ -89,6 +89,32 @@ if (!isset($availableTags)) {
         <input type="file" name="images[]" multiple accept="image/*" class="form-control">
     </div>
 
+    <div class="mb-3">
+        <label class="form-label">Download Links</label>
+        <div id="download-links" style="max-height: 300px; overflow-y: auto;">
+            <?php if (isset($downloads) && !empty($downloads)): ?>
+                <?php foreach ($downloads as $download): ?>
+                    <div class="download-link mb-2">
+                        <input type="text" name="download_url[]" class="form-control" placeholder="Download URL" value="<?= h($download['url']) ?>">
+                        <div class="input-group mt-1">
+                            <input type="text" name="download_version[]" class="form-control" placeholder="Version (optional)" value="<?= h($download['version']) ?>">
+                            <button type="button" class="btn btn-outline-danger remove-download-link" title="Remove">&times;</button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="download-link mb-2">
+                    <input type="text" name="download_url[]" class="form-control" placeholder="Download URL">
+                    <div class="input-group mt-1">
+                        <input type="text" name="download_version[]" class="form-control" placeholder="Version (optional)">
+                        <button type="button" class="btn btn-outline-danger remove-download-link" title="Remove">&times;</button>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+        <button type="button" id="add-download-link" class="btn btn-secondary mt-2">Add another download link</button>
+    </div>
+
     <!-- Include tags autocomplete -->
     <?php include 'views/assets/_tags_autocomplete.php'; ?>
 
@@ -115,4 +141,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Pass the tags array to JavaScript for autocomplete
 const availableTags = <?= json_encode(array_values($availableTags)); ?>;
+
+document.getElementById('add-download-link').addEventListener('click', function() {
+    var container = document.getElementById('download-links');
+    var div = document.createElement('div');
+    div.className = 'download-link mb-2';
+    div.innerHTML = 
+         '<input type="text" name="download_url[]" class="form-control" placeholder="Download URL">' +
+         '<div class="input-group mt-1">' +
+             '<input type="text" name="download_version[]" class="form-control" placeholder="Version (optional)">' +
+             '<button type="button" class="btn btn-outline-danger remove-download-link" title="Remove">&times;</button>' +
+         '</div>';
+    container.appendChild(div);
+});
+
+// Делегирование клика для удаления нужного блока ссылки
+document.getElementById('download-links').addEventListener('click', function(event) {
+    if (event.target && event.target.classList.contains('remove-download-link')) {
+        var downloadLinkDiv = event.target.closest('.download-link');
+        if (downloadLinkDiv) {
+            downloadLinkDiv.remove();
+        }
+    }
+});
 </script> 

@@ -49,10 +49,10 @@ CREATE TABLE IF NOT EXISTS `asset_downloads` (
   `id` int NOT NULL AUTO_INCREMENT,
   `asset_id` int NOT NULL,
   `url` varchar(2048) NOT NULL,
-  `file_type` varchar(50) DEFAULT NULL,
+  `version` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `asset_id` (`asset_id`,`file_type`)
+  KEY `asset_id` (`asset_id`,`version`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
