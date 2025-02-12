@@ -1,9 +1,17 @@
 <?php
 
 spl_autoload_register(function($class) {
-    $path = strtolower(str_replace('\\', '/', $class)) . '.php';
-    if (file_exists($path)) {
-        include $path;
+    $parts = explode('\\', $class);
+    
+    $fileName = array_pop($parts) . '.php';
+        $path = '';
+    if (!empty($parts)) {
+        $path = strtolower(implode('/', $parts)) . '/';
+    }
+    
+    $fullPath = $path . $fileName;
+    if (file_exists($fullPath)) {
+        include $fullPath;
     }
 });
 
