@@ -44,3 +44,12 @@
     padding: 0 5px;
 }
 
+#tags-suggestions {
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

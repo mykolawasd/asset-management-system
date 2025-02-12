@@ -1,3 +1,35 @@
+<?php
+// Supposed to have the following variables:
+// $asset - array of asset data (e.g. ['title' => '', 'description' => ''])
+// $availableTags - list of all tags (if not set, get from model)
+// $selectedTags - array of selected tag ids
+// $tagsById - associative array of tag id => tag name
+// $allowNewTags - flag to allow creating new tags (default true)
+
+if (!isset($asset['tags']) && isset($tags)) {
+    $asset['tags'] = $tags;
+}
+
+$selectedTags = [];
+$tagsById = [];
+if (!empty($asset['tags'])) {
+    foreach ($asset['tags'] as $tag) {
+        if (is_array($tag) && isset($tag['id'], $tag['name'])) {
+            $selectedTags[] = $tag['id'];
+            $tagsById[$tag['id']] = $tag['name'];
+        }
+    }
+}
+
+if (!isset($availableTags)) {
+    $availableTags = \Models\Tags::getAllTags();
+    foreach ($availableTags as $tag) {
+        if (!isset($tagsById[$tag['id']])) {
+            $tagsById[$tag['id']] = $tag['name'];
+        }
+    }
+}
+?>
 <form method="post" action="<?= $action ?>" enctype="multipart/form-data">
     <?php if (isset($errors) && !empty($errors)): ?>
         <div class="alert alert-danger">
@@ -33,14 +65,6 @@
         </div>
     </div>
 
-    <div class="mb-3">
-        <label for="tags" class="form-label">Tags (comma separated)</label>
-        <?php
-            $tagsValue = isset($tags) ? implode(',', array_map(function($tag){ return $tag['name']; }, $tags)) : '';
-        ?>
-        <input type="text" name="tags" id="tags" class="form-control" value="<?= h($tagsValue) ?>">
-    </div>
-
     <?php if (isset($asset) && isset($images) && !empty($images)): ?>
         <div class="mb-3">
             <label class="form-label">Existing Additional Images</label>
@@ -65,6 +89,9 @@
         <input type="file" name="images[]" multiple accept="image/*" class="form-control">
     </div>
 
+    <!-- Include tags autocomplete -->
+    <?php include 'views/assets/_tags_autocomplete.php'; ?>
+
     <button type="submit" class="btn btn-primary"><?= $submitButton ?></button>
     <?php if (isset($cancelLink)): ?>
         <a href="<?= $cancelLink ?>" class="btn btn-secondary">Cancel</a>
@@ -85,4 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         descriptionInput.value = quill.root.innerHTML;
     });
 });
+
+// Pass the tags array to JavaScript for autocomplete
+const availableTags = <?= json_encode(array_values($availableTags)); ?>;
 </script> 

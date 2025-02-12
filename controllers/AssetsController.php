@@ -8,6 +8,7 @@ use Models\Assets;
 use Models\Tags;
 use Models\AssetDownloads;
 use Models\AssetImages;
+use Models\User;
 
 class AssetsController extends Controller {
 
@@ -102,19 +103,13 @@ class AssetsController extends Controller {
 
 
             // Tags processing
-            if (!empty($tagsInput)) {
-                $tagNames = explode(',', $tagsInput);
-                foreach ($tagNames as $tagName) {
 
-                    $tagName = trim($tagName);
-                    if (!empty($tagName)) {
-                        $tag = \Models\Tags::getTagByName($tagName);
-                        if (!$tag) {
-                            $tagId = \Models\Tags::createTag($tagName);
-                        } else {
-                            $tagId = $tag['id'];
-                        }
-                        \Models\Assets::attachTag($assetId, $tagId);
+            if (!empty($tagsInput)) {
+                $tagIds = array_unique(explode(',', $tagsInput));
+                foreach ($tagIds as $tagId) {
+                    $tagId = trim($tagId);
+                    if (!empty($tagId) && is_numeric($tagId)) {
+                        \Models\Assets::attachTag($assetId, (int)$tagId);
                     }
                 }
             }
@@ -303,27 +298,35 @@ class AssetsController extends Controller {
                 
                 Assets::clearTags($assetId);
                 if (!empty($tagsInput)) {
-                    $tagNames = explode(',', $tagsInput);
-                    foreach ($tagNames as $tagName) {
-                        $tagName = trim($tagName);
-                        if (!empty($tagName)) {
-                            $tag = Tags::getTagByName($tagName);
-                            if (!$tag) {
-                                $tagId = Tags::createTag($tagName);
+                    $tags = array_unique(explode(',', $tagsInput));
+                    foreach ($tags as $tagValue) {
+                        $tagValue = trim($tagValue);
+                        if (!empty($tagValue)) {
+                            if (is_numeric($tagValue)) {
+                                // If the entered value is a number, it is an existing ID.
+                                \Models\Assets::attachTag($assetId, (int)$tagValue);
                             } else {
-                                $tagId = $tag['id'];
+                                // If the value is not a number, it is a new tag name.
+                                $tag = \Models\Tags::getTagByName($tagValue);
+                                if ($tag) {
+                                    // If the tag with this name already exists, attach it.
+                                    \Models\Assets::attachTag($assetId, (int)$tag['id']);
+                                } else {
+                                    // If the tag with this name does not exist, create it and attach it.
+                                    $newTagId = \Models\Tags::createTag($tagValue);
+                                    \Models\Assets::attachTag($assetId, $newTagId);
+                                }
                             }
-                            Assets::attachTag($assetId, $tagId);
                         }
                     }
                 }
 
-                return $this->redirect('/Assets/view?id=' . $assetId);
+                return $this->redirect('/assets/view?id=' . $assetId);
             }
             return $this->render(null, ['errors' => $errors, 'asset' => $asset, 'tags' => $tags, 'images' => $images]);
         }
 
-        return $this->render('Views/Assets/edit.php', [
+        return $this->render('views/assets/edit.php', [
             'asset' => $asset,
             'tags' => $tags,
             'images' => $images,
@@ -331,8 +334,8 @@ class AssetsController extends Controller {
     }
 
     public function deleteAction() {
-        if (!isset($_SESSION['user'])) {
-            return $this->redirect('/users/login');
+        if (!User::isAdmin()) {
+            return $this->redirect('/assets');
         }
 
         $assetId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
@@ -359,10 +362,12 @@ class AssetsController extends Controller {
                     unlink($thumbPath);
                 }
             }
+
+            Tags::deleteOrphanTags();
             return $this->redirect('/assets');
         }
 
-        Tags::deleteOrphanTags();
+        
 
         return $this->render('views/assets/delete.php', ['asset' => $asset]);
     }

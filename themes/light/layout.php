@@ -27,13 +27,14 @@ use \Models\User;
         <div class="col-md-6">
             <div class="d-flex align-items-center justify-content-end gap-2">
                 <?php if (User::isAdmin()): ?>
-                    <a href="/Assets/create" class="btn btn-success">
+                    <a href="/assets/create" class="btn btn-success">
                         <i class="bi bi-file-earmark-plus"></i> Create
                     </a>
+                    <a href="/assets/search" class="btn btn-secondary">
+                        <i class="bi bi-search"></i> Search
+                    </a>
                 <?php endif; ?>
-                <a href="/Assets/search" class="btn btn-secondary">
-                    <i class="bi bi-search"></i> Search
-                </a>
+
             </div>
         </div>
     
@@ -45,10 +46,10 @@ use \Models\User;
             <p>Welcome, <?php e($_SESSION['user']['username']); ?></p>
 
 
-            <a href="/Users/logout">Logout</a>
+            <a href="/users/logout">Logout</a>
             <?php else: ?>
-            <a href="/Users/login">Login</a>
-            <a href="/Users/register">Register</a>
+            <a href="/users/login">Login</a>
+            <a href="/users/register">Register</a>
             <?php endif; ?>
         </div>
 
@@ -62,6 +63,7 @@ use \Models\User;
     <body>
         <?= $content ?>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="/scripts/tags-autocomplete.js"></script>
     </body>
     </div>
 
