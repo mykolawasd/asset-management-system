@@ -85,3 +85,11 @@ function resizeImage($sourcePath, $destPath, $maxWidth, $maxHeight) {
     imagedestroy($srcImage);
     imagedestroy($dstImage);
 }
+
+function deleteFileIfExists(string $fileUrl): bool {
+    $filePath = ltrim($fileUrl, '/');
+    if (file_exists($filePath)) {
+        return unlink($filePath);
+    }
+    return false;
+}

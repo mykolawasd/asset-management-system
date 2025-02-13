@@ -9,6 +9,7 @@ use Models\Tags;
 use Models\AssetDownloads;
 use Models\AssetImages;
 use Models\User;
+use Core\helpers;
 
 class AssetsController extends Controller {
 
@@ -267,6 +268,9 @@ class AssetsController extends Controller {
                 if (!in_array($ext, $allowedExtensions)) {
                     $errors['thumbnail'] = 'Invalid file type for thumbnail.';
                 } else {
+                    if (!empty($asset['thumbnail_url'])) {
+                        deleteFileIfExists($asset['thumbnail_url']);
+                    }
                     $thumbFilename = uniqid('thumb_') . '.' . $ext;
                     $thumbDestination = $uploadDirThumb . $thumbFilename;
                     resizeImage($thumbFile['tmp_name'], $thumbDestination, 1280, 720);
@@ -380,14 +384,17 @@ class AssetsController extends Controller {
             foreach ($images as $image) {
                 AssetImages::deleteImage($image['id']);
             }
+            // TO DO: move to models
             Core::$db->query("DELETE FROM asset_tags WHERE asset_id = :assetId", [':assetId' => $assetId]);
             Core::$db->query("DELETE FROM asset_downloads WHERE asset_id = :assetId", [':assetId' => $assetId]);
             Core::$db->query("DELETE FROM assets WHERE id = :id", [':id' => $assetId]);
             if (!empty($asset['thumbnail_url'])) {
-                $thumbPath = ltrim($asset['thumbnail_url'], '/');
-                if (file_exists($thumbPath)) {
-                    unlink($thumbPath);
-                }
+                deleteFileIfExists($asset['thumbnail_url']);
+            }
+
+            $images = AssetImages::getImagesByAssetId($assetId);
+            foreach ($images as $image) {
+                AssetImages::deleteImage($image['id']);
             }
 
             Tags::deleteOrphanTags();

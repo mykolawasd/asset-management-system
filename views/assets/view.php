@@ -13,7 +13,7 @@ use \Models\User;
                 <?php if (User::isAdmin()): ?>
                 <div>
                     <a href="/assets/edit?id=<?= $asset['id'] ?>" class="btn btn-warning me-2">Edit</a>
-                    <a href="/assets/delete?id=<?= $asset['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this asset?');">Delete</a>
+                    <a href="/assets/delete?id=<?= $asset['id'] ?>" class="btn btn-danger">Delete</a>
                 </div>
                 <?php endif; ?>
             </div>
@@ -51,6 +51,7 @@ use \Models\User;
                 <img src="<?= $asset['thumbnail_url'] ?>" class="img-fluid mb-4" alt="<?php e($asset['title']); ?>">
             <?php endif; ?>
 
+            <h3>Description</h3>
             <!-- Block with asset  description -->
             <div class="description mb-3">
                 <div id="description-content" class="collapsed">
@@ -143,7 +144,9 @@ use \Models\User;
             <ul class="list-group">
                <?php foreach ($downloads as $download): ?>
                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <a href="<?= $download['url'] ?>" target="_blank" rel="noopener noreferrer"><?= h($download['version']) ?></a>
+                      <a href="<?= $download['url'] ?>" target="_blank" rel="noopener noreferrer">
+                          <?= !empty($download['version']) ? h($download['version']) : 'Download' ?>
+                      </a>
                       <span class="badge bg-secondary"><?= h($download['created_at']) ?></span>
                    </li>
                <?php endforeach; ?>
@@ -195,6 +198,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // If the height of the description is less than the threshold value, hide the button
   if (descriptionContent.scrollHeight <= collapseHeight) {
     toggleBtn.style.display = "none";
+    descriptionContent.classList.remove(collapsedClass);
   }
 
 

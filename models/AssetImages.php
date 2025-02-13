@@ -29,10 +29,7 @@ class AssetImages {
         $stmt = Core::$db->query($query, [':id' => $imageId]);
         $image = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($image) {
-            $filePath = ltrim($image['url'], '/');
-            if (file_exists($filePath)) {
-                unlink($filePath);
-            }
+            deleteFileIfExists($image['url']);
             $delQuery = "DELETE FROM asset_images WHERE id = :id";
             Core::$db->query($delQuery, [':id' => $imageId]);
         }
